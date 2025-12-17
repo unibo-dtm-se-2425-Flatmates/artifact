@@ -1,7 +1,9 @@
+import os
 import requests
 import streamlit as st
 
-API_URL = "http://localhost:8000"
+# Allow configuring the backend URL via Streamlit secrets or environment variables.
+API_URL = st.secrets.get("API_URL") or os.environ.get("API_URL") or "http://localhost:8000"
 
 def render_sidebar():
     """Render the Streamlit sidebar navigation and styling."""
