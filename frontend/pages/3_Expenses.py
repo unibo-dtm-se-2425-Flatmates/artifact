@@ -21,10 +21,19 @@ render_sidebar()
 
 
 def _format_currency(value: float) -> str:
+    """Render a numeric value as a currency string.
+
+    Args:
+        value (float): Amount to format.
+
+    Returns:
+        str: Value formatted with a dollar sign and two decimals.
+    """
     return f"${value:,.2f}"
 
 
 def _rerun_page() -> None:
+    """Trigger a Streamlit rerun while handling API changes gracefully."""
     try:
         st.rerun()
     except AttributeError:

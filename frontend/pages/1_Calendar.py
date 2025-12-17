@@ -41,6 +41,14 @@ if not USERS:
 events = get_events()
 
 def _extract_date(value):
+    """Normalize a date-like value into a `date` object.
+
+    Args:
+        value: Date, datetime, or ISO string value from calendar callbacks.
+
+    Returns:
+        date | None: Parsed date if possible, otherwise None.
+    """
     if value is None:
         return None
     if isinstance(value, date):
@@ -63,6 +71,15 @@ def _extract_date(value):
     return None
 
 def _parse_calendar_payload(payload, keys):
+    """Pull the first valid date from a calendar callback payload.
+
+    Args:
+        payload (dict): FullCalendar callback payload.
+        keys (list): Candidate keys that may contain a date value.
+
+    Returns:
+        date | None: Parsed date if present and valid.
+    """
     if not isinstance(payload, dict):
         return None
     for key in keys:
@@ -176,6 +193,14 @@ with col_panel:
     
     # Helper function to reset view
     def go_home(reset_skip=True):
+        """Return to list view and optionally clear the skip flag.
+
+        Args:
+            reset_skip (bool): Whether to clear the skip-event guard.
+
+        Returns:
+            None
+        """
         st.session_state.view_mode = "list"
         st.session_state.selected_date = date.today()
         st.session_state.selected_event = None
