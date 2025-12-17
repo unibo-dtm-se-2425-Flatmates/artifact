@@ -166,7 +166,7 @@ class Database:
             ),
         )
         self.conn.commit()
-        return event.copy(update={"id": cursor.lastrowid})
+        return event.model_copy(update={"id": cursor.lastrowid})
 
     def update_event(self, event_id: int, event: Event) -> Optional[Event]:
         """Update an existing event by ID.
@@ -203,7 +203,7 @@ class Database:
             ),
         )
         self.conn.commit()
-        return event.copy(update={"id": event_id})
+        return event.model_copy(update={"id": event_id})
 
     def get_events(self) -> List[Event]:
         """Retrieve all events ordered by date and start time."""
@@ -246,7 +246,7 @@ class Database:
             (item.name, item.quantity, item.added_by, 1 if item.purchased else 0),
         )
         self.conn.commit()
-        return item.copy(update={"id": cursor.lastrowid})
+        return item.model_copy(update={"id": cursor.lastrowid})
 
     def get_shopping_list(self) -> List[ShoppingItem]:
         """Return the full shopping list ordered by insertion."""
@@ -301,7 +301,7 @@ class Database:
             ),
         )
         self.conn.commit()
-        return expense.copy(update={"id": cursor.lastrowid})
+        return expense.model_copy(update={"id": cursor.lastrowid})
 
     def get_expenses(self) -> List[Expense]:
         """Return all recorded expenses ordered by insertion."""
@@ -347,7 +347,7 @@ class Database:
             ),
         )
         self.conn.commit()
-        return reimbursement.copy(update={"id": cursor.lastrowid})
+        return reimbursement.model_copy(update={"id": cursor.lastrowid})
 
     def get_reimbursements(self) -> List[Reimbursement]:
         """Fetch all reimbursements ordered by insertion."""
