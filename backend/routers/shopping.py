@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import List
 from ..models import ShoppingItem
-from ..database import db
+from ..db import db
 
 router = APIRouter(prefix="/shopping", tags=["shopping"])
 

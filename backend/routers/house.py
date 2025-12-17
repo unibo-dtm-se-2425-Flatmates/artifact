@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from ..models import HouseSettings
-from ..database import db
+from ..db import db
 
 router = APIRouter(prefix="/house", tags=["house"])
 
