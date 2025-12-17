@@ -1,6 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from typing import List, Dict
-from ..models import Expense, Debt
+from ..models import Expense, Debt, Reimbursement
 from ..database import db
 
 router = APIRouter(prefix="/expenses", tags=["expenses"])
@@ -37,6 +37,16 @@ def get_debts():
         # Everyone involved (including payer if they are in the list) "pays" the split amount
         for person in involved:
             balances[person] = balances.get(person, 0) - split_amount
+
+    reimbursements = db.get_reimbursements()
+    for reimbursement in reimbursements:
+        amount = max(reimbursement.amount, 0)
+        if amount <= 0:
+            continue
+        payer = reimbursement.from_person
+        receiver = reimbursement.to_person
+        balances[payer] = balances.get(payer, 0) + amount
+        balances[receiver] = balances.get(receiver, 0) - amount
 
     # Separate into debtors and creditors
     debtors = []
@@ -79,3 +89,17 @@ def get_debts():
             j += 1
             
     return debts
+
+
+@router.get("/reimbursements", response_model=List[Reimbursement])
+def get_reimbursements():
+    return db.get_reimbursements()
+
+
+@router.post("/reimbursements", response_model=Reimbursement)
+def add_reimbursement(reimbursement: Reimbursement):
+    if reimbursement.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
+    if reimbursement.from_person == reimbursement.to_person:
+        raise HTTPException(status_code=400, detail="People involved must be different")
+    return db.add_reimbursement(reimbursement)
