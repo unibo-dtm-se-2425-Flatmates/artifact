@@ -148,6 +148,13 @@ def update_house_settings(settings):
     """
     requests.post(f"{API_URL}/house/", json=settings)
 
+def reset_house_data():
+    """Request a full reset of house data."""
+    try:
+        response = requests.delete(f"{API_URL}/house/reset")
+        return response.status_code == 200
+    except:
+        return False
 
 def get_reimbursements():
     """Fetch reimbursement history.

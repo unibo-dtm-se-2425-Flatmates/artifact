@@ -4,10 +4,14 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_house_settings, update_house_settings, render_sidebar
+from utils import get_house_settings, update_house_settings, render_sidebar, reset_house_data
 
 st.set_page_config(page_title="Settings", page_icon="⚙️")
 render_sidebar()
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils import get_house_settings, update_house_settings, reset_house_data
+
+st.set_page_config(page_title="Settings", page_icon="⚙️")
 
 st.title("⚙️ Settings")
 
@@ -115,6 +119,30 @@ else:
                     st.success("✅ Settings saved successfully!")
                     st.session_state.edit_mode = False
                     st.rerun()
+
+    with st.container(border=True):
+        st.subheader("🗑️ Danger Zone")
+        st.warning(
+            "Deleting the house clears all settings, calendar events, shopping items, expenses, and reimbursements. This cannot be undone.",
+            icon="⚠️",
+        )
+        confirm_reset = st.checkbox(
+            "I understand this will erase all data",
+            key="confirm_reset",
+            help="Required before the delete button is enabled.",
+        )
+        if st.button(
+            "🗑️ Delete house and data",
+            type="primary",
+            use_container_width=True,
+            disabled=not confirm_reset,
+        ):
+            if reset_house_data():
+                st.success("House removed. Start fresh by entering a new setup.")
+                st.session_state.edit_mode = True
+                st.rerun()
+            else:
+                st.error("Unable to reset right now. Please try again.")
 
     # Cancel button outside the form
     if current_flatmates: # Only show cancel if we have a valid state to go back to

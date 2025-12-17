@@ -91,3 +91,25 @@ def test_expenses_and_reimbursements(db_instance):
     reimbursements = db_instance.get_reimbursements()
     assert len(reimbursements) == 1
     assert reimbursements[0].amount == 60.0
+
+
+def test_clear_all_data(db_instance):
+    db_instance.update_house_settings(HouseSettings(name="Demo", flatmates=["A"]))
+    db_instance.add_event(
+        Event(title="Temp", date=date.today(), description="", assigned_to=["A"])
+    )
+    db_instance.add_shopping_item(ShoppingItem(name="Bread", quantity=1, added_by="A"))
+    db_instance.add_expense(
+        Expense(title="Water", amount=10.0, payer="A", involved_people=["A"])
+    )
+    db_instance.add_reimbursement(
+        Reimbursement(from_person="A", to_person="A", amount=1.0)
+    )
+
+    db_instance.clear_all_data()
+
+    assert db_instance.get_house_settings() == HouseSettings()
+    assert db_instance.get_events() == []
+    assert db_instance.get_shopping_list() == []
+    assert db_instance.get_expenses() == []
+    assert db_instance.get_reimbursements() == []

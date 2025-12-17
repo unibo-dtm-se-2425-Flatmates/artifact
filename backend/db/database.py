@@ -371,5 +371,15 @@ class Database:
             )
         return reimbursements
 
+    def clear_all_data(self) -> None:
+        """Remove all persisted data, including house settings."""
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM events")
+        cursor.execute("DELETE FROM shopping_items")
+        cursor.execute("DELETE FROM expenses")
+        cursor.execute("DELETE FROM reimbursements")
+        cursor.execute("DELETE FROM house_settings")
+        self.conn.commit()
+
 
 db = Database()

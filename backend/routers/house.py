@@ -20,3 +20,10 @@ def update_house_settings(settings: HouseSettings):
         HouseSettings: Persisted configuration.
     """
     return db.update_house_settings(settings)
+
+
+@router.delete("/reset")
+def reset_house_data():
+    """Delete house settings and all related data."""
+    db.clear_all_data()
+    return {"message": "House and data reset"}

@@ -109,6 +109,28 @@ def test_house_settings_helpers(monkeypatch):
     assert captured["payload"] == {"name": "New", "flatmates": ["A", "B"]}
 
 
+def test_reset_house_data(monkeypatch):
+    captured = {}
+
+    def fake_delete(url):
+        captured["url"] = url
+        return DummyResponse(200, {"message": "House and data reset"})
+
+    monkeypatch.setattr(utils.requests, "delete", fake_delete)
+
+    assert utils.reset_house_data() is True
+    assert captured["url"] == f"{utils.API_URL}/house/reset"
+
+
+def test_reset_house_data_failure(monkeypatch):
+    def boom(url):
+        raise RuntimeError("network down")
+
+    monkeypatch.setattr(utils.requests, "delete", boom)
+
+    assert utils.reset_house_data() is False
+
+
 def test_get_reimbursements_handles_failure(monkeypatch):
     def fake_get(url):
         raise RuntimeError("oops")
