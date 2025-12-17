@@ -1,0 +1,15 @@
+include README.md
+include LICENSE
+include requirements.txt
+
+# Include source files
+recursive-include backend *
+recursive-include frontend *
+recursive-include test *
+
+# Exclude build artifacts and caches
+recursive-exclude ** __pycache__
+recursive-exclude ** *.pyc
+recursive-exclude ** *.pyo
+recursive-exclude ** *.pyd
+global-exclude .DS_Store

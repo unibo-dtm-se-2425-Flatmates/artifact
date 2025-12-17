@@ -11,9 +11,12 @@ A comprehensive web application designed to help flatmates manage their shared l
 
 ## 🛠️ Tech Stack
 
-- **Backend**: FastAPI, Uvicorn
-- **Frontend**: Streamlit, Pandas, Altair
-- **Language**: Python
+- **Backend**: FastAPI, Uvicorn, Pydantic
+- **Frontend**: Streamlit, Altair, Pandas
+- **Database**: SQLite (via Python `sqlite3`)
+- **Testing**: Pytest
+- **HTTP Client**: Requests, HTTPX
+- **Language**: Python 3.8+
 
 ## 🚀 Getting Started
 
@@ -26,7 +29,7 @@ A comprehensive web application designed to help flatmates manage their shared l
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Flatmate-Project-TEST2
+   cd Flatmate-Manager-TEST
    ```
 
 2. **Create and activate a virtual environment** (Recommended)
@@ -54,6 +57,8 @@ uvicorn backend.main:app --reload
 ```
 The API will be available at `http://localhost:8000`. You can view the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs).
 
+The SQLite database is created automatically at first run in `backend/db/flatmate.db`.
+
 ### 2. Start the Frontend Interface
 Open a new terminal and run:
 ```bash
@@ -64,15 +69,42 @@ The web application will open automatically in your default browser at [http://l
 ## 📂 Project Structure
 
 ```
-Flatmate-Project-TEST2/
-├── backend/            # FastAPI backend
-│   ├── routers/        # API endpoints (calendar, expenses, etc.)
-│   ├── database.py     # Database configuration
-│   ├── main.py         # Application entry point
-│   └── models.py       # Data models
-├── frontend/           # Streamlit frontend
-│   ├── pages/          # Application pages
-│   ├── app.py          # Main entry point
-│   └── utils.py        # Utility functions
-└── requirements.txt    # Project dependencies
+Flatmate-Manager-TEST/
+├── .gitignore
+├── LICENSE
+├── MANIFEST.in
+├── README.md
+├── requirements.txt           # Python dependencies
+├── run_tests.py               # Helper to run test suite
+├── backend/                   # FastAPI backend
+│   ├── main.py                # Backend entry point
+│   ├── models.py              # Pydantic models / schemas
+│   ├── db/
+│   │   ├── __init__.py
+│   │   └── database.py        # Database configuration/connection
+│   └── routers/               # API routes
+│       ├── calendar.py
+│       ├── expenses.py
+│       ├── house.py
+│       └── shopping.py
+├── frontend/                  # Streamlit frontend
+│   ├── app.py                 # Frontend entry point
+│   ├── utils.py               # Helpers and UI utilities
+│   └── pages/                 # Multi-page app screens
+│       ├── 0_Settings.py
+│       ├── 1_Calendar.py
+│       ├── 2_Shopping_List.py
+│       └── 3_Expenses.py
+└── test/                      # Unit tests
+   ├── test_backend.py
+   ├── test_database.py
+   └── test_frontend.py
+```
+
+## 🧪 Tests
+
+Run all tests with:
+
+```bash
+python run_tests.py
 ```
