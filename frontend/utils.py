@@ -49,3 +49,15 @@ def get_debts():
     except:
         return []
     return []
+
+def get_house_settings():
+    try:
+        response = requests.get(f"{API_URL}/house/")
+        if response.status_code == 200:
+            return response.json()
+    except:
+        return {"name": "My Flat", "flatmates": []}
+    return {"name": "My Flat", "flatmates": []}
+
+def update_house_settings(settings):
+    requests.post(f"{API_URL}/house/", json=settings)
