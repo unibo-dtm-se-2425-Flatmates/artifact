@@ -7,6 +7,7 @@ class Event(BaseModel):
     title: str
     date: date
     description: Optional[str] = None
+    assigned_to: Optional[str] = None
 
 class ShoppingItem(BaseModel):
     id: Optional[int] = None
@@ -26,3 +27,7 @@ class Debt(BaseModel):
     debtor: str
     creditor: str
     amount: float
+
+class HouseSettings(BaseModel):
+    name: str = "My Flat"
+    flatmates: List[str] = ["Flatmate 1", "Flatmate 2"]
