@@ -5,14 +5,19 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_expenses, add_expense, get_debts
+from utils import get_expenses, add_expense, get_debts, get_house_settings
 
 st.set_page_config(page_title="Expenses", page_icon="💸")
 
 st.title("💸 Expense Manager")
 
-# Hardcoded users for now, could be dynamic later
-USERS = ["Alice", "Bob", "Charlie", "David"]
+# Get users from settings
+settings = get_house_settings()
+USERS = settings.get("flatmates", [])
+
+if not USERS:
+    st.warning("No flatmates configured! Please go to the Settings page to add flatmates.")
+    st.stop()
 
 tab1, tab2 = st.tabs(["Add Expense", "Debt Overview"])
 

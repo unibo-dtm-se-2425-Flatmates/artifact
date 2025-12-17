@@ -1,15 +1,23 @@
 from typing import List, Dict
-from .models import Event, ShoppingItem, Expense
+from .models import Event, ShoppingItem, Expense, HouseSettings
 
 class Database:
     def __init__(self):
         self.events: Dict[int, Event] = {}
         self.shopping_list: Dict[int, ShoppingItem] = {}
         self.expenses: Dict[int, Expense] = {}
+        self.house_settings = HouseSettings()
         
         self._event_id_counter = 1
         self._item_id_counter = 1
         self._expense_id_counter = 1
+
+    def get_house_settings(self) -> HouseSettings:
+        return self.house_settings
+
+    def update_house_settings(self, settings: HouseSettings) -> HouseSettings:
+        self.house_settings = settings
+        return self.house_settings
 
     def add_event(self, event: Event) -> Event:
         event.id = self._event_id_counter
