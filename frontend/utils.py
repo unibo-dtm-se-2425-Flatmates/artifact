@@ -14,6 +14,9 @@ def get_events():
 def create_event(event_data):
     requests.post(f"{API_URL}/calendar/", json=event_data)
 
+def update_event(event_id, event_data):
+    requests.put(f"{API_URL}/calendar/{event_id}", json=event_data)
+
 def get_shopping_list():
     try:
         response = requests.get(f"{API_URL}/shopping/")

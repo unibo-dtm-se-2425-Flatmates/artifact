@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from .models import Event, ShoppingItem, Expense, HouseSettings
 
 class Database:
@@ -24,6 +24,13 @@ class Database:
         self.events[self._event_id_counter] = event
         self._event_id_counter += 1
         return event
+
+    def update_event(self, event_id: int, event: Event) -> Optional[Event]:
+        if event_id in self.events:
+            event.id = event_id
+            self.events[event_id] = event
+            return event
+        return None
 
     def get_events(self) -> List[Event]:
         return list(self.events.values())
