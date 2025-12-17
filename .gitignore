@@ -1,0 +1,17 @@
+# Python compilation files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env
+
+# Mac OS specific
+.DS_Store
+
+# VS Code settings
+.vscode/

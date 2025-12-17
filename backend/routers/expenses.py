@@ -1,0 +1,81 @@
+from fastapi import APIRouter
+from typing import List, Dict
+from ..models import Expense, Debt
+from ..database import db
+
+router = APIRouter(prefix="/expenses", tags=["expenses"])
+
+@router.get("/", response_model=List[Expense])
+def get_expenses():
+    return db.get_expenses()
+
+@router.post("/", response_model=Expense)
+def add_expense(expense: Expense):
+    return db.add_expense(expense)
+
+@router.get("/debts", response_model=List[Debt])
+def get_debts():
+    expenses = db.get_expenses()
+    balances: Dict[str, float] = {}
+
+    # Calculate net balances
+    for expense in expenses:
+        amount = expense.amount
+        payer = expense.payer
+        involved = expense.involved_people
+        
+        if not involved:
+            continue
+            
+        split_amount = amount / len(involved)
+        
+        # Payer paid the full amount, so they are effectively "up" by that amount initially
+        # But we can just think in terms of net flow.
+        # Payer gets +amount
+        balances[payer] = balances.get(payer, 0) + amount
+        
+        # Everyone involved (including payer if they are in the list) "pays" the split amount
+        for person in involved:
+            balances[person] = balances.get(person, 0) - split_amount
+
+    # Separate into debtors and creditors
+    debtors = []
+    creditors = []
+    
+    for person, amount in balances.items():
+        # Round to 2 decimal places to avoid floating point issues
+        amount = round(amount, 2)
+        if amount < -0.01:
+            debtors.append({"person": person, "amount": amount})
+        elif amount > 0.01:
+            creditors.append({"person": person, "amount": amount})
+            
+    # Sort by magnitude to optimize (greedy approach)
+    debtors.sort(key=lambda x: x["amount"]) # Ascending (most negative first)
+    creditors.sort(key=lambda x: x["amount"], reverse=True) # Descending (most positive first)
+    
+    debts = []
+    
+    i = 0 # debtor index
+    j = 0 # creditor index
+    
+    while i < len(debtors) and j < len(creditors):
+        debtor = debtors[i]
+        creditor = creditors[j]
+        
+        # The amount to settle is the minimum of what the debtor owes and what the creditor is owed
+        amount = min(abs(debtor["amount"]), creditor["amount"])
+        
+        debts.append(Debt(debtor=debtor["person"], creditor=creditor["person"], amount=round(amount, 2)))
+        
+        # Update balances
+        debtor["amount"] += amount
+        creditor["amount"] -= amount
+        
+        # Move indices if settled
+        if abs(debtor["amount"]) < 0.01:
+            i += 1
+        if creditor["amount"] < 0.01:
+            j += 1
+            
+    return debts
