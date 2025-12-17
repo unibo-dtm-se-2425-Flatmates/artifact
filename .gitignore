@@ -20,3 +20,6 @@ env/
 *.db
 *.sqlite
 *.sqlite3
+
+# Pytest cache
+.pytest_cache/
