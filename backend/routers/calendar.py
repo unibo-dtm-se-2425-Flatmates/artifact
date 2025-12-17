@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 from ..models import Event
-from ..database import db
+from ..db import db
 
 router = APIRouter(prefix="/calendar", tags=["calendar"])
 

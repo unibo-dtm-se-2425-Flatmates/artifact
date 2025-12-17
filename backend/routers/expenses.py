@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict
 from ..models import Expense, Debt, Reimbursement
-from ..database import db
+from ..db import db
 
 router = APIRouter(prefix="/expenses", tags=["expenses"])
 
