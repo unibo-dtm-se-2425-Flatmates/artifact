@@ -10,4 +10,9 @@ app.include_router(house.router)
 
 @app.get("/")
 def read_root():
+    """Return a simple welcome message for the API root endpoint.
+
+    Returns:
+        dict: Welcome payload with a static message.
+    """
     return {"message": "Welcome to the Flatmate App API"}

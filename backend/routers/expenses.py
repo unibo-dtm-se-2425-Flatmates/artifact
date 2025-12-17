@@ -7,14 +7,24 @@ router = APIRouter(prefix="/expenses", tags=["expenses"])
 
 @router.get("/", response_model=List[Expense])
 def get_expenses():
+    """Retrieve all expenses."""
     return db.get_expenses()
 
 @router.post("/", response_model=Expense)
 def add_expense(expense: Expense):
+    """Create a new expense entry.
+
+    Args:
+        expense (Expense): Expense data to persist.
+
+    Returns:
+        Expense: Stored expense with ID.
+    """
     return db.add_expense(expense)
 
 @router.get("/debts", response_model=List[Debt])
 def get_debts():
+    """Compute simplified debt settlements from expenses and reimbursements."""
     expenses = db.get_expenses()
     balances: Dict[str, float] = {}
 
@@ -93,11 +103,23 @@ def get_debts():
 
 @router.get("/reimbursements", response_model=List[Reimbursement])
 def get_reimbursements():
+    """Fetch all recorded reimbursements."""
     return db.get_reimbursements()
 
 
 @router.post("/reimbursements", response_model=Reimbursement)
 def add_reimbursement(reimbursement: Reimbursement):
+    """Record a reimbursement transaction.
+
+    Args:
+        reimbursement (Reimbursement): Transfer details.
+
+    Returns:
+        Reimbursement: Stored reimbursement with ID.
+
+    Raises:
+        HTTPException: If the amount is not positive or parties match.
+    """
     if reimbursement.amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be positive")
     if reimbursement.from_person == reimbursement.to_person:
