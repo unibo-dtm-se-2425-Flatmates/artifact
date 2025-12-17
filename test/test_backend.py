@@ -155,3 +155,29 @@ def test_expenses_and_debts_flow(client):
     updated = debts_after.json()
     assert len(updated) == 1
     assert updated[0]["amount"] == 30.0
+
+
+def test_reset_house_data(client):
+    client.post("/house/", json={"name": "Resettable", "flatmates": ["A", "B"]})
+
+    event_payload = {
+        "title": "To clear",
+        "date": str(date.today()),
+        "description": "temp",
+        "assigned_to": [],
+    }
+    client.post("/calendar/", json=event_payload)
+    client.post("/shopping/", json={"name": "Milk", "quantity": 1, "added_by": "A"})
+    client.post(
+        "/expenses/",
+        json={"title": "Bill", "amount": 20.0, "payer": "A", "involved_people": ["A", "B"]},
+    )
+
+    reset_resp = client.delete("/house/reset")
+    assert reset_resp.status_code == 200
+    assert reset_resp.json()["message"] == "House and data reset"
+
+    assert client.get("/house/").json() == {"name": "", "flatmates": []}
+    assert client.get("/calendar/").json() == []
+    assert client.get("/shopping/").json() == []
+    assert client.get("/expenses/").json() == []
