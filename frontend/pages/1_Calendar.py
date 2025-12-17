@@ -30,6 +30,13 @@ if "skip_event_id" not in st.session_state:
 # --- DATA LOADING ---
 settings = get_house_settings()
 USERS = settings.get("flatmates", [])
+
+if not USERS:
+    st.warning("🏠 House setup required before using the calendar.")
+    if st.button("⚙️ Go to Settings"):
+        st.switch_page("pages/0_Settings.py")
+    st.stop()
+
 events = get_events()
 
 def _extract_date(value):

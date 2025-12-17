@@ -14,6 +14,12 @@ st.title("🛒 Shopping List")
 settings = get_house_settings()
 USERS = settings.get("flatmates", [])
 
+if not USERS:
+    st.warning("🏠 House setup required before using the shopping list.")
+    if st.button("⚙️ Go to Settings"):
+        st.switch_page("pages/0_Settings.py")
+    st.stop()
+
 # Add item
 col1, col2, col3, col4 = st.columns([3, 2, 1, 1])
 with col1:

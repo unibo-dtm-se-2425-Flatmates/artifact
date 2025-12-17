@@ -16,7 +16,9 @@ settings = get_house_settings()
 USERS = settings.get("flatmates", [])
 
 if not USERS:
-    st.warning("No flatmates configured! Please go to the Settings page to add flatmates.")
+    st.warning("🏠 House setup required before tracking expenses.")
+    if st.button("⚙️ Go to Settings"):
+        st.switch_page("pages/0_Settings.py")
     st.stop()
 
 tab1, tab2 = st.tabs(["Add Expense", "Debt Overview"])
