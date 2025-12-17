@@ -64,3 +64,16 @@ def get_house_settings():
 
 def update_house_settings(settings):
     requests.post(f"{API_URL}/house/", json=settings)
+
+def get_reimbursements():
+    try:
+        response = requests.get(f"{API_URL}/expenses/reimbursements")
+        if response.status_code == 200:
+            return response.json()
+    except:
+        return []
+    return []
+
+
+def add_reimbursement(reimbursement_data):
+    requests.post(f"{API_URL}/expenses/reimbursements", json=reimbursement_data)

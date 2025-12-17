@@ -1,16 +1,18 @@
 from typing import List, Dict, Optional
-from .models import Event, ShoppingItem, Expense, HouseSettings
+from .models import Event, ShoppingItem, Expense, HouseSettings, Reimbursement
 
 class Database:
     def __init__(self):
         self.events: Dict[int, Event] = {}
         self.shopping_list: Dict[int, ShoppingItem] = {}
         self.expenses: Dict[int, Expense] = {}
+        self.reimbursements: Dict[int, Reimbursement] = {}
         self.house_settings = HouseSettings()
         
         self._event_id_counter = 1
         self._item_id_counter = 1
         self._expense_id_counter = 1
+        self._reimbursement_id_counter = 1
 
     def get_house_settings(self) -> HouseSettings:
         return self.house_settings
@@ -56,5 +58,14 @@ class Database:
 
     def get_expenses(self) -> List[Expense]:
         return list(self.expenses.values())
+
+    def add_reimbursement(self, reimbursement: Reimbursement) -> Reimbursement:
+        reimbursement.id = self._reimbursement_id_counter
+        self.reimbursements[self._reimbursement_id_counter] = reimbursement
+        self._reimbursement_id_counter += 1
+        return reimbursement
+
+    def get_reimbursements(self) -> List[Reimbursement]:
+        return list(self.reimbursements.values())
 
 db = Database()

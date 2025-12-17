@@ -30,6 +30,13 @@ class Debt(BaseModel):
     creditor: str
     amount: float
 
+class Reimbursement(BaseModel):
+    id: Optional[int] = None
+    from_person: str
+    to_person: str
+    amount: float
+    note: Optional[str] = None
+
 class HouseSettings(BaseModel):
     name: str = ""
     flatmates: List[str] = []

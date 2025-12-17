@@ -5,3 +5,4 @@ requests
 pydantic
 pandas
 streamlit-calendar
+altair
