@@ -1,12 +1,43 @@
 import streamlit as st
+from utils import render_sidebar
 
 st.set_page_config(
-    page_title="Flatmate App",
+    page_title="Flatmate Manager App",
     page_icon="🏠",
     layout="wide"
 )
 
-st.title("Welcome to the Flatmate App! 🏠")
+render_sidebar()
+
+st.markdown("""
+    <style>
+    section[data-testid="stMain"] [data-testid="stPageLink-NavLink"] {
+        background-color: #FF4B4B !important;
+        border: 1px solid #FF4B4B !important;
+        color: white !important;
+        border-radius: 8px;
+        padding: 0.20rem 0.5rem !important;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none !important;
+    }
+    section[data-testid="stMain"] [data-testid="stPageLink-NavLink"]:hover {
+        background-color: #FF3333 !important;
+        border-color: #FF3333 !important;
+    }
+    section[data-testid="stMain"] [data-testid="stPageLink-NavLink"] p {
+        color: white !important;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    /* Ensure icon is also white */
+    section[data-testid="stMain"] [data-testid="stPageLink-NavLink"] span {
+        color: white !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.title("Welcome to the Flatmate Manager app! 🏠")
 st.markdown("Manage your shared living space with ease.")
 
 col1, col2 = st.columns(2)
