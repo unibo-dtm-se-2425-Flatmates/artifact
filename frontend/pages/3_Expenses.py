@@ -13,9 +13,11 @@ from utils import (
     get_house_settings,
     get_reimbursements,
     add_reimbursement,
+    render_sidebar
 )
 
 st.set_page_config(page_title="Expenses", page_icon="💸", layout="wide")
+render_sidebar()
 
 st.markdown(
     """

@@ -4,11 +4,12 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_house_settings, update_house_settings
+from utils import get_house_settings, update_house_settings, render_sidebar
 
-st.set_page_config(page_title="House Setup", page_icon="🏠")
+st.set_page_config(page_title="Settings", page_icon="⚙️")
+render_sidebar()
 
-st.title("🏠 House Setup")
+st.title("⚙️ Settings")
 
 settings = get_house_settings()
 current_flatmates = settings.get("flatmates", [])
@@ -51,7 +52,7 @@ else:
     st.markdown("Configure your shared living space.")
     
     with st.container(border=True):
-        st.subheader("⚙️ Edit Configuration")
+        st.subheader("✍🏼 Edit Configuration")
         
         # Number of flatmates (Outside form to trigger dynamic UI update)
         default_count = len(current_flatmates) if current_flatmates else 2

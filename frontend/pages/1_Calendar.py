@@ -7,9 +7,10 @@ from streamlit_calendar import calendar
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_events, create_event, update_event, get_house_settings
+from utils import get_events, create_event, update_event, get_house_settings, render_sidebar
 
 st.set_page_config(page_title="Calendar", page_icon="📅", layout="wide")
+render_sidebar()
 
 st.title("📅 Flatmate Calendar")
 
