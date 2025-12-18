@@ -113,6 +113,11 @@ def test_expenses_and_debts_flow(client):
     }
     create_expense = client.post("/expenses/", json=expense_payload)
     assert create_expense.status_code == 200
+    expenses_list = client.get("/expenses/")
+    assert expenses_list.status_code == 200
+    expenses_payload = expenses_list.json()
+    assert len(expenses_payload) == 1
+    assert expenses_payload[0]["title"] == "Groceries"
 
     debts_resp = client.get("/expenses/debts")
     assert debts_resp.status_code == 200

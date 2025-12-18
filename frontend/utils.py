@@ -2,8 +2,31 @@ import os
 import requests
 import streamlit as st
 
-# Allow configuring the backend URL via Streamlit secrets or environment variables.
-API_URL = st.secrets.get("API_URL") or os.environ.get("API_URL") or "http://localhost:8000"
+try:
+    # Raised when no secrets file is present; makes imports crash under pytest.
+    from streamlit.errors import StreamlitSecretNotFoundError
+except Exception:  # pragma: no cover - fallback for older Streamlit versions
+    class StreamlitSecretNotFoundError(Exception):
+        pass
+
+
+def _resolve_api_url():
+    """Safely resolve the backend API URL without requiring secrets during tests."""
+    env_url = os.environ.get("API_URL")
+    if env_url:
+        return env_url
+
+    try:
+        return st.secrets.get("API_URL")
+    except StreamlitSecretNotFoundError:
+        return None
+    except Exception:
+        # Avoid import-time crashes if secrets cannot be parsed for any reason.
+        return None
+
+
+# Allow configuring the backend URL via secrets or environment variables while staying test-friendly.
+API_URL = _resolve_api_url() or "http://localhost:8000"
 
 def render_sidebar():
     """Render the Streamlit sidebar navigation and styling."""
@@ -150,6 +173,7 @@ def update_house_settings(settings):
     """
     requests.post(f"{API_URL}/house/", json=settings)
 
+
 def reset_house_data():
     """Request a full reset of house data."""
     try:
@@ -157,6 +181,7 @@ def reset_house_data():
         return response.status_code == 200
     except:
         return False
+
 
 def get_reimbursements():
     """Fetch reimbursement history.
