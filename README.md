@@ -1,6 +1,9 @@
 # Flatmate Manager App 🏠
 
-A comprehensive web application designed to help flatmates manage their shared living space efficiently. Built with FastAPI for the backend and Streamlit for the frontend.
+## 📝 Description
+
+A comprehensive web application designed to simplify shared living by centralizing house management. 
+**Flatmates** helps flatmates organize schedules, track expenses, coordinate shopping, and manage household settings—all in one intuitive platform.
 
 ## ✨ Features
 
@@ -18,6 +21,11 @@ A comprehensive web application designed to help flatmates manage their shared l
 - **HTTP Client**: Requests, HTTPX
 - **Language**: Python 3.8+
 
+## ☁️ Deployment
+
+- **Frontend**: Streamlit Community Cloud hosts the Streamlit app.
+- **Backend**: Railway runs the FastAPI service and database.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -29,7 +37,6 @@ A comprehensive web application designed to help flatmates manage their shared l
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd Flatmate-Manager-TEST
    ```
 
 2. **Create and activate a virtual environment** (Recommended)
@@ -48,7 +55,7 @@ A comprehensive web application designed to help flatmates manage their shared l
 
 ## 🏃‍♂️ Running the Application
 
-The application consists of two parts that need to run simultaneously.
+> For the **local usage**, the application consists of two parts that need to run simultaneously.
 
 ### 1. Start the Backend API
 Open a terminal and run:
@@ -65,6 +72,8 @@ Open a new terminal and run:
 streamlit run frontend/app.py
 ```
 The web application will open automatically in your default browser at [http://localhost:8501](http://localhost:8501).
+
+> Instead for the remote usage, the application is hosted in this link: [**Flatmates App**](https://flatmates.streamlit.app/)
 
 ## 📂 Project Structure
 
