@@ -1,17 +1,20 @@
-from fastapi import APIRouter, HTTPException
-from typing import List, Dict
-from ..models import Expense, Debt, Reimbursement
+from typing import Dict, List
+
+from fastapi import APIRouter, Depends, HTTPException
+
 from ..db import db
+from ..models import Debt, Expense, Reimbursement
+from .auth import UserContext, get_current_user
 
 router = APIRouter(prefix="/expenses", tags=["expenses"])
 
 @router.get("/", response_model=List[Expense])
-def get_expenses():
-    """Retrieve all expenses."""
-    return db.get_expenses()
+def get_expenses(current_user: UserContext = Depends(get_current_user)):
+    """Retrieve all expenses for the user's house."""
+    return db.get_expenses(current_user.house_id)
 
 @router.post("/", response_model=Expense)
-def add_expense(expense: Expense):
+def add_expense(expense: Expense, current_user: UserContext = Depends(get_current_user)):
     """Create a new expense entry.
 
     Args:
@@ -20,12 +23,12 @@ def add_expense(expense: Expense):
     Returns:
         Expense: Stored expense with ID.
     """
-    return db.add_expense(expense)
+    return db.add_expense(expense, current_user.house_id)
 
 @router.get("/debts", response_model=List[Debt])
-def get_debts():
+def get_debts(current_user: UserContext = Depends(get_current_user)):
     """Compute simplified debt settlements from expenses and reimbursements."""
-    expenses = db.get_expenses()
+    expenses = db.get_expenses(current_user.house_id)
     balances: Dict[str, float] = {}
 
     # Calculate net balances
@@ -48,7 +51,7 @@ def get_debts():
         for person in involved:
             balances[person] = balances.get(person, 0) - split_amount
 
-    reimbursements = db.get_reimbursements()
+    reimbursements = db.get_reimbursements(current_user.house_id)
     for reimbursement in reimbursements:
         amount = max(reimbursement.amount, 0)
         if amount <= 0:
@@ -102,13 +105,13 @@ def get_debts():
 
 
 @router.get("/reimbursements", response_model=List[Reimbursement])
-def get_reimbursements():
+def get_reimbursements(current_user: UserContext = Depends(get_current_user)):
     """Fetch all recorded reimbursements."""
-    return db.get_reimbursements()
+    return db.get_reimbursements(current_user.house_id)
 
 
 @router.post("/reimbursements", response_model=Reimbursement)
-def add_reimbursement(reimbursement: Reimbursement):
+def add_reimbursement(reimbursement: Reimbursement, current_user: UserContext = Depends(get_current_user)):
     """Record a reimbursement transaction.
 
     Args:
@@ -124,4 +127,4 @@ def add_reimbursement(reimbursement: Reimbursement):
         raise HTTPException(status_code=400, detail="Amount must be positive")
     if reimbursement.from_person == reimbursement.to_person:
         raise HTTPException(status_code=400, detail="People involved must be different")
-    return db.add_reimbursement(reimbursement)
+    return db.add_reimbursement(reimbursement, current_user.house_id)

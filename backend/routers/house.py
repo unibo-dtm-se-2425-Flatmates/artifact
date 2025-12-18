@@ -1,29 +1,25 @@
-from fastapi import APIRouter
-from ..models import HouseSettings
+from fastapi import APIRouter, Depends
+
 from ..db import db
+from ..models import HouseSettings
+from .auth import UserContext, get_current_user
 
 router = APIRouter(prefix="/house", tags=["house"])
 
 @router.get("/", response_model=HouseSettings)
-def get_house_settings():
-    """Return the saved house configuration."""
-    return db.get_house_settings()
+def get_house_settings(current_user: UserContext = Depends(get_current_user)):
+    """Return the saved house configuration for the current user."""
+    return db.get_house_settings(current_user.house_id)
 
 @router.post("/", response_model=HouseSettings)
-def update_house_settings(settings: HouseSettings):
-    """Create or update the house configuration.
-
-    Args:
-        settings (HouseSettings): House name and flatmates.
-
-    Returns:
-        HouseSettings: Persisted configuration.
-    """
-    return db.update_house_settings(settings)
+def update_house_settings(settings: HouseSettings, current_user: UserContext = Depends(get_current_user)):
+    """Update the current house configuration (name only)."""
+    settings.flatmates = db.get_house_members(current_user.house_id)
+    return db.update_house_settings(current_user.house_id, settings)
 
 
 @router.delete("/reset")
-def reset_house_data():
-    """Delete house settings and all related data."""
-    db.clear_all_data()
+def reset_house_data(current_user: UserContext = Depends(get_current_user)):
+    """Delete all data for the current house (events, shopping, expenses, reimbursements)."""
+    db.clear_house_data(current_user.house_id)
     return {"message": "House and data reset"}
