@@ -27,8 +27,7 @@ def _resolve_api_url():
 
 
 # Allow configuring the backend URL via secrets or environment variables while staying test-friendly.
-# API_URL = _resolve_api_url() or "http://localhost:8000"
-API_URL = "http://localhost:8000"
+API_URL = _resolve_api_url() or "http://localhost:8000"
 
 def _auth_headers(token: Optional[str] = None) -> Dict[str, str]:
     """Build authorization headers from the provided token or session state."""
