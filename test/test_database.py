@@ -62,6 +62,21 @@ def test_event_crud(db_instance):
     assert updated.title == "Updated Session"
 
 
+def test_event_ordering_by_time(db_instance):
+    today = date.today()
+    early = Event(title="Early", date=today, start_time=time(9, 0), end_time=None, description=None, assigned_to=[])
+    mid = Event(title="Mid", date=today, start_time=time(12, 0), end_time=None, description=None, assigned_to=[])
+    no_time = Event(title="NoTime", date=today, description=None, assigned_to=[])
+
+    db_instance.add_event(mid)
+    db_instance.add_event(no_time)
+    db_instance.add_event(early)
+
+    events = db_instance.get_events()
+    titles_in_order = [e.title for e in events]
+    assert titles_in_order[:3] == ["Early", "Mid", "NoTime"]
+
+
 def test_shopping_list_flow(db_instance):
     item = ShoppingItem(name="Bread", quantity=2, added_by="Alice")
     created = db_instance.add_shopping_item(item)
@@ -70,8 +85,15 @@ def test_shopping_list_flow(db_instance):
     items = db_instance.get_shopping_list()
     assert len(items) == 1
     assert items[0].name == "Bread"
+    assert items[0].purchased is False
+
+    purchased_item = ShoppingItem(name="Milk", quantity=1, added_by="Bob", purchased=True)
+    purchased_created = db_instance.add_shopping_item(purchased_item)
+    fetched = db_instance.get_shopping_list()
+    assert any(i.id == purchased_created.id and i.purchased for i in fetched)
 
     db_instance.remove_shopping_item(created.id)
+    db_instance.remove_shopping_item(purchased_created.id)
     assert db_instance.get_shopping_list() == []
 
 
