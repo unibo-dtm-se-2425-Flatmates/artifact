@@ -28,7 +28,6 @@ def _resolve_api_url():
 
 # Allow configuring the backend URL via secrets or environment variables while staying test-friendly.
 # API_URL = _resolve_api_url() or "http://localhost:8000"
-# todo: togliere l'hastag quando mergio la PR, mi serve solo ora che punti su localhost per vedere in locale se funziona con strealit run app.py
 API_URL = "http://localhost:8000"
 
 def _auth_headers(token: Optional[str] = None) -> Dict[str, str]:
@@ -97,15 +96,22 @@ def render_sidebar():
 
         profile = st.session_state.get("profile") or {}
         user = profile.get("user", {}) if isinstance(profile, dict) else {}
+        house = profile.get("house", {}) if isinstance(profile, dict) else {}
         username = user.get("username")
+        house_name = house.get("name")
+
+        st.markdown(f"**User:** {username if username else 'Guest'}")
+        if house_name:
+            st.markdown(f"**House:** {house_name}")
+
         if username:
-            st.caption(f"Signed in as **{username}**")
+            if st.button("Logout", use_container_width=True):
+                for key in ("auth_token", "profile"):
+                    st.session_state.pop(key, None)
+                st.rerun()
         else:
-            st.caption("Not signed in")
-        if st.button("Logout", use_container_width=True, disabled=not username):
-            for key in ("auth_token", "profile"):
-                st.session_state.pop(key, None)
-            st.rerun()
+            if st.button("Login", use_container_width=True):
+                st.switch_page("app.py")
         
         st.markdown("---")
         
@@ -252,6 +258,15 @@ def reset_house_data():
     """Request a full reset of house data."""
     try:
         response = requests.delete(f"{API_URL}/house/reset", headers=_auth_headers())
+        return response.status_code == 200
+    except:
+        return False
+
+
+def delete_house():
+    """Delete the current house and all its users/data."""
+    try:
+        response = requests.delete(f"{API_URL}/house/delete", headers=_auth_headers())
         return response.status_code == 200
     except:
         return False

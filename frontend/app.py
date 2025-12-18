@@ -33,31 +33,47 @@ if "auth_token" not in st.session_state:
                 st.error("Invalid credentials")
 
     with register_tab:
-        with st.form("register_form"):
-            username_r = st.text_input("Username", key="reg_user")
-            password_r = st.text_input("Password", type="password", key="reg_pass")
-            house_choice = st.radio("House", ["Create new", "Join existing"], horizontal=True)
-            house_name = None
-            house_code = None
-            if house_choice == "Create new":
+        st.markdown("### Choose how to join")
+        col_create, col_join = st.columns(2, gap="large")
+
+        with col_create:
+            with st.form("register_create_form"):
+                st.subheader("Create new house")
+                username_r = st.text_input("Username", key="reg_user_new")
+                password_r = st.text_input("Password", type="password", key="reg_pass_new")
                 house_name = st.text_input("House name", placeholder="e.g. Via Roma 42")
-            else:
-                house_code = st.text_input("House code", placeholder="Enter the house ID")
+                submitted_r = st.form_submit_button("Create account", type="primary")
 
-            submitted_r = st.form_submit_button("Create account", type="primary")
-
-        if submitted_r:
-            if house_choice == "Join existing" and not (house_code or "").strip():
-                st.error("Please enter a house code to join an existing house.")
-            else:
-                result = register_user(username_r, password_r, house_name=house_name, house_code=house_code)
+            if submitted_r:
+                result = register_user(username_r, password_r, house_name=house_name, house_code=None)
                 if result:
                     st.session_state["auth_token"] = result.get("token")
                     st.session_state["profile"] = result
                     st.success("Account created and signed in")
                     st.rerun()
                 else:
-                    st.error("Registration failed. Try a different username or code.")
+                    st.error("Registration failed. Try a different username or house name.")
+
+        with col_join:
+            with st.form("register_join_form"):
+                st.subheader("Join existing house")
+                username_j = st.text_input("Username", key="reg_user_join")
+                password_j = st.text_input("Password", type="password", key="reg_pass_join")
+                house_code = st.text_input("House code", placeholder="Enter invite code")
+                submitted_j = st.form_submit_button("Join house", type="primary")
+
+            if submitted_j:
+                if not (house_code or "").strip():
+                    st.error("Please enter a house code to join an existing house.")
+                else:
+                    result = register_user(username_j, password_j, house_name=None, house_code=house_code)
+                    if result:
+                        st.session_state["auth_token"] = result.get("token")
+                        st.session_state["profile"] = result
+                        st.success("Account created and signed in")
+                        st.rerun()
+                    else:
+                        st.error("Registration failed. Check the invite code or choose another username.")
 
     st.stop()
 

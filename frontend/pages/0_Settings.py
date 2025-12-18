@@ -20,60 +20,87 @@ house_name = house.get("name", "My Flat")
 join_code = house.get("join_code")
 current_flatmates = house.get("flatmates", [])
 
-with st.container(border=True):
-    st.subheader("👤 Profile")
-    st.markdown(f"**Username:** {user.get('username', '-')}")
+info_col, house_col = st.columns([1, 2], gap="large")
 
-with st.container(border=True):
-    st.subheader("🏡 House")
-    st.markdown(f"**Name:** {house_name}")
-    if join_code:
-        st.markdown("**Invite code**")
-        st.code(join_code, language="text")
-        st.caption("Share this code with flatmates so they can join your house.")
+with info_col:
+    with st.container(border=True):
+        st.subheader("👤 Profile")
+        st.markdown(f"**Username:** {user.get('username', '-')}" )
+        st.markdown(f"**House:** {house_name}")
+        if join_code:
+            st.markdown("**Invite code**")
+            st.code(join_code, language="text")
+            st.caption("Share this code with flatmates so they can join your house.")
 
-    st.divider()
-    st.subheader("👥 Flatmates")
-    if current_flatmates:
-        cols = st.columns(3)
-        for idx, mate in enumerate(current_flatmates):
-            with cols[idx % 3]:
-                st.info(f"**{mate}**", icon="👤")
-        st.caption("Flatmates are registered users. Share the invite code so others can join; users who leave should log out.")
-    else:
-        st.info("No flatmates found yet. Share the code to invite others.")
+with house_col:
+    with st.container(border=True):
+        st.subheader("👥 Flatmates")
+        if current_flatmates:
+            cols = st.columns(3)
+            for idx, mate in enumerate(current_flatmates):
+                with cols[idx % 3]:
+                    st.info(f"**{mate}**", icon="👤")
+            st.caption("Flatmates are registered users. Share the invite code so others can join; users who leave should log out.")
+        else:
+            st.info("No flatmates found yet. Share the code to invite others.")
 
-with st.container(border=True):
-    st.subheader("✏️ Update house name")
-    with st.form("house_name_form"):
-        new_name = st.text_input("House name", value=house_name)
-        submitted = st.form_submit_button("Save", type="primary")
-    if submitted:
-        update_house_settings({"name": new_name})
-        st.success("House name updated")
-        st.session_state.pop("profile", None)
-        st.rerun()
+    with st.container(border=True):
+        st.subheader("✏️ Update house name")
+        with st.form("house_name_form"):
+            new_name = st.text_input("House name", value=house_name)
+            submitted = st.form_submit_button("Save", type="primary")
+        if submitted:
+            update_house_settings({"name": new_name})
+            st.success("House name updated")
+            st.session_state.pop("profile", None)
+            st.rerun()
 
 with st.container(border=True):
     st.subheader("🗑️ Danger Zone")
     st.warning(
-        "Clearing the house will delete all events, shopping items, expenses, and reimbursements for this house.",
+        "Choose what to remove for this house.",
         icon="⚠️",
     )
-    confirm_reset = st.checkbox(
-        "I understand this will erase all shared data",
-        key="confirm_reset",
-        help="Required before the delete button is enabled.",
-    )
-    if st.button(
-        "🗑️ Clear house data",
-        type="primary",
-        use_container_width=True,
-        disabled=not confirm_reset,
-    ):
-        if reset_house_data():
-            st.success("House data cleared. Start fresh!")
-            st.session_state.pop("profile", None)
-            st.rerun()
-        else:
-            st.error("Unable to reset right now. Please try again.")
+    col_reset, col_delete = st.columns(2)
+
+    with col_reset:
+        st.markdown("**Clear shared data**")
+        confirm_reset = st.checkbox(
+            "I understand this erases events, shopping, expenses, reimbursements",
+            key="confirm_reset",
+            help="Required before the clear button is enabled.",
+        )
+        if st.button(
+            "🗑️ Clear data",
+            type="primary",
+            use_container_width=True,
+            disabled=not confirm_reset,
+        ):
+            if reset_house_data():
+                st.success("House data cleared. Start fresh!")
+                st.rerun()
+            else:
+                st.error("Unable to reset right now. Please try again.")
+
+    with col_delete:
+        st.markdown("**Delete house & members**")
+        confirm_delete = st.checkbox(
+            "I understand this deletes the house, users, and data",
+            key="confirm_delete",
+            help="All house users will be removed.",
+        )
+        if st.button(
+            "❌ Delete house",
+            type="primary",
+            use_container_width=True,
+            disabled=not confirm_delete,
+        ):
+            from utils import delete_house
+
+            if delete_house():
+                st.success("House deleted. You will need to register or join a house again.")
+                for key in ("auth_token", "profile"):
+                    st.session_state.pop(key, None)
+                st.rerun()
+            else:
+                st.error("Unable to delete the house right now. Please try again.")
