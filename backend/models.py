@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional
 from datetime import date, time
+from typing import List, Optional
+
+from pydantic import BaseModel, Field
 
 class Event(BaseModel):
     id: Optional[int] = None
@@ -39,5 +40,31 @@ class Reimbursement(BaseModel):
     note: Optional[str] = None
 
 class HouseSettings(BaseModel):
+    id: Optional[int] = None
     name: str = ""
     flatmates: List[str] = Field(default_factory=list)
+    join_code: Optional[str] = None
+
+
+class User(BaseModel):
+    id: int
+    username: str
+    house_id: Optional[int] = None
+
+
+class AuthResponse(BaseModel):
+    token: str
+    user: User
+    house: HouseSettings
+
+
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    house_name: Optional[str] = None
+    house_code: Optional[str] = None
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
