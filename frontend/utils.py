@@ -1,6 +1,7 @@
 import os
 import requests
 import streamlit as st
+from typing import Optional, Dict, Any
 
 try:
     # Raised when no secrets file is present; makes imports crash under pytest.
@@ -26,12 +27,81 @@ def _resolve_api_url():
 
 
 # Allow configuring the backend URL via secrets or environment variables while staying test-friendly.
-API_URL = _resolve_api_url() or "http://localhost:8000"
+# API_URL = _resolve_api_url() or "http://localhost:8000"
+# todo: togliere l'hastag quando mergio la PR, mi serve solo ora che punti su localhost per vedere in locale se funziona con strealit run app.py
+API_URL = "http://localhost:8000"
+
+def _auth_headers(token: Optional[str] = None) -> Dict[str, str]:
+    """Build authorization headers from the provided token or session state."""
+    active_token = token or st.session_state.get("auth_token")
+    return {"Authorization": f"Bearer {active_token}"} if active_token else {}
+
+
+def register_user(username: str, password: str, house_name: Optional[str] = None, house_code: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    payload = {"username": username, "password": password, "house_name": house_name, "house_code": house_code}
+    try:
+        resp = requests.post(f"{API_URL}/auth/register", json=payload)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        return None
+    return None
+
+
+def login_user(username: str, password: str) -> Optional[Dict[str, Any]]:
+    payload = {"username": username, "password": password}
+    try:
+        resp = requests.post(f"{API_URL}/auth/login", json=payload)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        return None
+    return None
+
+
+def fetch_profile(token: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    try:
+        resp = requests.get(f"{API_URL}/auth/me", headers=_auth_headers(token))
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        return None
+    return None
+
+
+def require_auth() -> Dict[str, Any]:
+    """Ensure the user is authenticated; stop the app otherwise."""
+    token = st.session_state.get("auth_token")
+    if not token:
+        st.warning("Please login to continue.")
+        st.stop()
+
+    if "profile" not in st.session_state or not st.session_state["profile"]:
+        profile = fetch_profile(token)
+        if profile:
+            st.session_state["profile"] = profile
+        else:
+            st.warning("Session expired. Please login again.")
+            st.stop()
+
+    return st.session_state["profile"]
 
 def render_sidebar():
     """Render the Streamlit sidebar navigation and styling."""
     with st.sidebar:
         st.title("🏠 Flatmate Manager")
+
+        profile = st.session_state.get("profile") or {}
+        user = profile.get("user", {}) if isinstance(profile, dict) else {}
+        username = user.get("username")
+        if username:
+            st.caption(f"Signed in as **{username}**")
+        else:
+            st.caption("Not signed in")
+        if st.button("Logout", use_container_width=True, disabled=not username):
+            for key in ("auth_token", "profile"):
+                st.session_state.pop(key, None)
+            st.rerun()
         
         st.markdown("---")
         
@@ -61,7 +131,7 @@ def get_events():
         list: List of event dictionaries, empty on failure.
     """
     try:
-        response = requests.get(f"{API_URL}/calendar/")
+        response = requests.get(f"{API_URL}/calendar/", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -74,7 +144,7 @@ def create_event(event_data):
     Args:
         event_data (dict): Event payload matching backend schema.
     """
-    requests.post(f"{API_URL}/calendar/", json=event_data)
+    requests.post(f"{API_URL}/calendar/", json=event_data, headers=_auth_headers())
 
 def update_event(event_id, event_data):
     """Update an existing event by ID.
@@ -83,7 +153,7 @@ def update_event(event_id, event_data):
         event_id (int): Target event identifier.
         event_data (dict): Updated event payload.
     """
-    requests.put(f"{API_URL}/calendar/{event_id}", json=event_data)
+    requests.put(f"{API_URL}/calendar/{event_id}", json=event_data, headers=_auth_headers())
 
 def get_shopping_list():
     """Fetch the shopping list from the backend.
@@ -92,7 +162,7 @@ def get_shopping_list():
         list: Shopping items or empty list on error.
     """
     try:
-        response = requests.get(f"{API_URL}/shopping/")
+        response = requests.get(f"{API_URL}/shopping/", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -105,7 +175,7 @@ def add_shopping_item(item_data):
     Args:
         item_data (dict): Item fields required by the backend.
     """
-    requests.post(f"{API_URL}/shopping/", json=item_data)
+    requests.post(f"{API_URL}/shopping/", json=item_data, headers=_auth_headers())
 
 def remove_shopping_item(item_id):
     """Remove a shopping item by ID.
@@ -113,7 +183,7 @@ def remove_shopping_item(item_id):
     Args:
         item_id (int): Identifier of the item to delete.
     """
-    requests.delete(f"{API_URL}/shopping/{item_id}")
+    requests.delete(f"{API_URL}/shopping/{item_id}", headers=_auth_headers())
 
 def get_expenses():
     """Fetch all expenses.
@@ -122,7 +192,7 @@ def get_expenses():
         list: Expense records or empty list on error.
     """
     try:
-        response = requests.get(f"{API_URL}/expenses/")
+        response = requests.get(f"{API_URL}/expenses/", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -135,7 +205,7 @@ def add_expense(expense_data):
     Args:
         expense_data (dict): Expense payload expected by backend.
     """
-    requests.post(f"{API_URL}/expenses/", json=expense_data)
+    requests.post(f"{API_URL}/expenses/", json=expense_data, headers=_auth_headers())
 
 def get_debts():
     """Fetch simplified debt suggestions from the backend.
@@ -144,7 +214,7 @@ def get_debts():
         list: Debt records or empty list on error.
     """
     try:
-        response = requests.get(f"{API_URL}/expenses/debts")
+        response = requests.get(f"{API_URL}/expenses/debts", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -158,7 +228,7 @@ def get_house_settings():
         dict: House name and flatmates, with defaults on failure.
     """
     try:
-        response = requests.get(f"{API_URL}/house/")
+        response = requests.get(f"{API_URL}/house/", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -171,13 +241,13 @@ def update_house_settings(settings):
     Args:
         settings (dict): House name and flatmates payload.
     """
-    requests.post(f"{API_URL}/house/", json=settings)
+    requests.post(f"{API_URL}/house/", json=settings, headers=_auth_headers())
 
 
 def reset_house_data():
     """Request a full reset of house data."""
     try:
-        response = requests.delete(f"{API_URL}/house/reset")
+        response = requests.delete(f"{API_URL}/house/reset", headers=_auth_headers())
         return response.status_code == 200
     except:
         return False
@@ -190,7 +260,7 @@ def get_reimbursements():
         list: Reimbursement records or empty list on error.
     """
     try:
-        response = requests.get(f"{API_URL}/expenses/reimbursements")
+        response = requests.get(f"{API_URL}/expenses/reimbursements", headers=_auth_headers())
         if response.status_code == 200:
             return response.json()
     except:
@@ -204,4 +274,4 @@ def add_reimbursement(reimbursement_data):
     Args:
         reimbursement_data (dict): Reimbursement payload expected by backend.
     """
-    requests.post(f"{API_URL}/expenses/reimbursements", json=reimbursement_data)
+    requests.post(f"{API_URL}/expenses/reimbursements", json=reimbursement_data, headers=_auth_headers())
