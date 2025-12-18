@@ -70,10 +70,12 @@ def fetch_profile(token: Optional[str] = None) -> Optional[Dict[str, Any]]:
 
 
 def require_auth() -> Dict[str, Any]:
-    """Ensure the user is authenticated; stop the app otherwise."""
+    """Ensure the user is authenticated; stop the app otherwise and offer a login link."""
     token = st.session_state.get("auth_token")
     if not token:
         st.warning("Please login to continue.")
+        if st.button("Go to Login", type="primary"):
+            st.switch_page("app.py")
         st.stop()
 
     if "profile" not in st.session_state or not st.session_state["profile"]:
@@ -82,6 +84,8 @@ def require_auth() -> Dict[str, Any]:
             st.session_state["profile"] = profile
         else:
             st.warning("Session expired. Please login again.")
+            if st.button("Go to Login", type="primary"):
+                st.switch_page("app.py")
             st.stop()
 
     return st.session_state["profile"]

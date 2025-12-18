@@ -47,14 +47,17 @@ if "auth_token" not in st.session_state:
             submitted_r = st.form_submit_button("Create account", type="primary")
 
         if submitted_r:
-            result = register_user(username_r, password_r, house_name=house_name, house_code=house_code)
-            if result:
-                st.session_state["auth_token"] = result.get("token")
-                st.session_state["profile"] = result
-                st.success("Account created and signed in")
-                st.rerun()
+            if house_choice == "Join existing" and not (house_code or "").strip():
+                st.error("Please enter a house code to join an existing house.")
             else:
-                st.error("Registration failed. Try a different username or code.")
+                result = register_user(username_r, password_r, house_name=house_name, house_code=house_code)
+                if result:
+                    st.session_state["auth_token"] = result.get("token")
+                    st.session_state["profile"] = result
+                    st.success("Account created and signed in")
+                    st.rerun()
+                else:
+                    st.error("Registration failed. Try a different username or code.")
 
     st.stop()
 
