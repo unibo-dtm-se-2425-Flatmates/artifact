@@ -137,3 +137,40 @@ def test_get_reimbursements_handles_failure(monkeypatch):
 
     monkeypatch.setattr(utils.requests, "get", fake_get)
     assert utils.get_reimbursements() == []
+
+
+def test_get_reimbursements_success(monkeypatch):
+    def fake_get(url):
+        assert url == f"{utils.API_URL}/expenses/reimbursements"
+        return DummyResponse(200, [{"id": 1, "amount": 10}])
+
+    monkeypatch.setattr(utils.requests, "get", fake_get)
+    assert utils.get_reimbursements() == [{"id": 1, "amount": 10}]
+
+
+def test_resolve_api_url_prefers_env(monkeypatch):
+    monkeypatch.setenv("API_URL", "http://env.example")
+    dummy_secrets = type("DummySecrets", (), {"get": lambda self, key: "http://secret.example"})()
+    monkeypatch.setattr(utils, "st", type("DummyStreamlit", (), {"secrets": dummy_secrets})())
+
+    assert utils._resolve_api_url() == "http://env.example"
+
+
+def test_resolve_api_url_uses_secrets(monkeypatch):
+    monkeypatch.delenv("API_URL", raising=False)
+    dummy_secrets = type("DummySecrets", (), {"get": lambda self, key: "http://secret.example"})()
+    monkeypatch.setattr(utils, "st", type("DummyStreamlit", (), {"secrets": dummy_secrets})())
+
+    assert utils._resolve_api_url() == "http://secret.example"
+
+
+def test_resolve_api_url_missing_returns_none(monkeypatch):
+    monkeypatch.delenv("API_URL", raising=False)
+
+    def missing_get(self, key):
+        raise utils.StreamlitSecretNotFoundError()
+
+    dummy_secrets = type("DummySecrets", (), {"get": missing_get})()
+    monkeypatch.setattr(utils, "st", type("DummyStreamlit", (), {"secrets": dummy_secrets})())
+
+    assert utils._resolve_api_url() is None
