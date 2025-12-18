@@ -20,6 +20,7 @@ from utils import (
 st.set_page_config(page_title="Expenses", page_icon="💸", layout="wide")
 render_sidebar()
 
+st.title("💸 Expense Manager")
 require_auth()
 
 
@@ -42,8 +43,6 @@ def _rerun_page() -> None:
     except AttributeError:
         st.experimental_rerun()
 
-
-st.title("💸 Expense Manager")
 
 # Get users from settings
 settings = get_house_settings()
