@@ -23,3 +23,10 @@ def reset_house_data(current_user: UserContext = Depends(get_current_user)):
     """Delete all data for the current house (events, shopping, expenses, reimbursements)."""
     db.clear_house_data(current_user.house_id)
     return {"message": "House and data reset"}
+
+
+@router.delete("/delete")
+def delete_house(current_user: UserContext = Depends(get_current_user)):
+    """Delete the current house, its users, sessions, and all related data."""
+    db.delete_house(current_user.house_id)
+    return {"message": "House deleted"}

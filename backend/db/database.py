@@ -433,5 +433,23 @@ class Database:
         cursor.execute("DELETE FROM reimbursements WHERE house_id = ?", (house_id,))
         self.conn.commit()
 
+    def delete_house(self, house_id: int) -> None:
+        """Remove a house and all its related data, users, and sessions."""
+        cursor = self.conn.cursor()
+        # Clear domain data first
+        cursor.execute("DELETE FROM events WHERE house_id = ?", (house_id,))
+        cursor.execute("DELETE FROM shopping_items WHERE house_id = ?", (house_id,))
+        cursor.execute("DELETE FROM expenses WHERE house_id = ?", (house_id,))
+        cursor.execute("DELETE FROM reimbursements WHERE house_id = ?", (house_id,))
+        # Remove sessions for users in this house
+        cursor.execute(
+            "DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE house_id = ?)",
+            (house_id,),
+        )
+        # Remove users and house
+        cursor.execute("DELETE FROM users WHERE house_id = ?", (house_id,))
+        cursor.execute("DELETE FROM houses WHERE id = ?", (house_id,))
+        self.conn.commit()
+
 
 db = Database()
