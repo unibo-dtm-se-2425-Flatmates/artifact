@@ -4,12 +4,21 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_shopping_list, add_shopping_item, remove_shopping_item, get_house_settings, render_sidebar
+from utils import (
+    add_shopping_item,
+    get_house_settings,
+    get_shopping_list,
+    render_sidebar,
+    remove_shopping_item,
+    require_auth,
+)
 
 st.set_page_config(page_title="Shopping List", page_icon="🛒")
 render_sidebar()
 
 st.title("🛒 Shopping List")
+
+require_auth()
 
 # Get users
 settings = get_house_settings()

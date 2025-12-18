@@ -7,12 +7,21 @@ from streamlit_calendar import calendar
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import get_events, create_event, update_event, get_house_settings, render_sidebar
+from utils import (
+    create_event,
+    get_events,
+    get_house_settings,
+    render_sidebar,
+    require_auth,
+    update_event,
+)
 
 st.set_page_config(page_title="Calendar", page_icon="📅", layout="wide")
 render_sidebar()
 
 st.title("📅 Flatmate Calendar")
+
+profile = require_auth()
 
 # --- STATE MANAGEMENT ---
 if "selected_date" not in st.session_state:
@@ -29,7 +38,7 @@ if "skip_event_id" not in st.session_state:
     st.session_state.skip_event_id = None
 
 # --- DATA LOADING ---
-settings = get_house_settings()
+settings = profile.get("house", get_house_settings())
 USERS = settings.get("flatmates", [])
 
 if not USERS:

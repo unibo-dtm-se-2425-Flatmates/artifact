@@ -13,11 +13,14 @@ from utils import (
     get_house_settings,
     get_reimbursements,
     add_reimbursement,
-    render_sidebar
+    render_sidebar,
+    require_auth,
 )
 
 st.set_page_config(page_title="Expenses", page_icon="💸", layout="wide")
 render_sidebar()
+
+require_auth()
 
 
 def _format_currency(value: float) -> str:
