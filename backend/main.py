@@ -1,8 +1,10 @@
 from fastapi import FastAPI
-from .routers import calendar, shopping, expenses, house
+
+from .routers import auth, calendar, expenses, house, shopping
 
 app = FastAPI(title="Flatmate App API")
 
+app.include_router(auth.router)
 app.include_router(calendar.router)
 app.include_router(shopping.router)
 app.include_router(expenses.router)
