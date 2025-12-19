@@ -9,7 +9,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.1.0 - Initial Setup
-> Foundation & Core Structure
+> 
 
 - Set up project infrastructure (#1)
 - Implemented multiple flatmates support (#2)
@@ -17,7 +17,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.2.0 - Calendar & House Settings Improvements
-> Various improvements
+> 
 
 - Added calendar page improvements (#3)
 - Improved house settings (#4)
@@ -27,7 +27,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.3.0 - House Setup, Reimbursement and UI/UX
-> Enhanced Functionality
+> 
 
 - Added "reimbursement" feature (#7)
 - Improved general UX/UI (#8)
@@ -36,8 +36,8 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### 0.4.0 - Expense  & Database
-> Infrastructure & Docs
+### 0.4.0 - Expense & Database
+> 
 
 - Implemented SQLite3 database (#11)
 - Updated .gitignore for database files (#12)
@@ -45,7 +45,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.5.0 - Testing & Infrastructure
-> Quality & Features
+> 
 
 - Added functions docstrings documentation (#13)
 - Created comprehensive test suite (#14)
@@ -53,10 +53,10 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### 0.6.0 - Testing & Infrastructure
-> Quality & Features
+### 0.6.0 - Implement Home/Data erasure 
+> 
 
-- Delete home and data option (#16)
+- Create delete home and data option (#16)
 
 ---
 
@@ -77,15 +77,15 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-## [1.1.0] - Implement user login/registration 
-> Production Ready
+## [1.1.0] - Implement user login/registration
+> 
 
 - Connected Railway backend hosting (#17)
 - Updated README with deployment instructions (#18)
 - Fixed failing frontend tests (#19)
 - **Feature**: Added user login and registration (#20)
-- Fix backend API pointer
-- Change app name
+- Fix backend API pointer (#21)
+- Change app name (#22)
 - Added CHANGELOG.md and versioning
 
 **PRs included**: #17-#23
@@ -96,4 +96,40 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### FEATURES:
+### FEATURES
+
+- **#2** - Implement multiple flatmates
+- **#3** - Calendar page improvements
+- **#4** - Improve house settings
+- **#6** - Implement mandatory house setup
+- **#7** - Add reimbursement feature
+- **#8** - Improve general UX/UI
+- **#10** - Change debt overview page layout
+- **#11** - Implement SQLite3 database
+- **#14** - Create tests
+- **#16** - Delete home and data option
+- **#17** - Connect Railway backend hosting
+- **#20** - Add login
+
+---
+
+### BUGFIX
+
+- **#5** - Fix update event calendar
+- **#19** - Fix failing frontend tests
+- **#21** - Change pointer backend API url
+- **#22** - Change app name
+
+---
+
+### INFRA
+
+- **#1** - Setup project
+- **#9** - Update README.md
+- **#12** - Update .gitignore with database files
+- **#13** - Add functions docstrings
+- **#15** - Add licence and manifest
+- **#18** - Update readme with deployments
+- **#23** - Add CHANGELOG.md and versioning
+
+---
