@@ -2,11 +2,10 @@
 
 All notable changes to the **Flatmates App** project are documented in this file.
 
----
+<br>
+<br>
 
-## Development Milestones
-
----
+# 🔨 Development Milestones
 
 ### 0.1.0 - Initial Setup
 > Foundation & Core Structure
@@ -58,11 +57,13 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 - Create delete home and data option (#16)
 
----
+<br>
+<br>
 
-## Deployment History
+<br>
 
----
+# 🚀 Deployment History
+
 
 ## [1.0.0] - First Release
 > Initial public release
@@ -90,13 +91,13 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 **PRs included**: #17-#23
 
----
+<br>
+<br>
+<br>
 
-## PRs History
+# 📝 PRs History
 
----
-
-### FEATURES
+## FEATURES
 
 - **#2** - Implement multiple flatmates
 - **#3** - Calendar page improvements
@@ -111,18 +112,17 @@ All notable changes to the **Flatmates App** project are documented in this file
 - **#17** - Connect Railway backend hosting
 - **#20** - Add login
 
----
 
-### BUGFIX
+
+## BUGFIX
 
 - **#5** - Fix update event calendar
 - **#19** - Fix failing frontend tests
 - **#21** - Change pointer backend API url
 - **#22** - Change app name
 
----
 
-### INFRA
+## INFRA
 
 - **#1** - Setup project
 - **#9** - Update README.md
