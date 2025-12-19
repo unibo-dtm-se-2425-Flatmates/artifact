@@ -9,7 +9,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.1.0 - Initial Setup
-> 
+> Foundation & Core Structure
 
 - Set up project infrastructure (#1)
 - Implemented multiple flatmates support (#2)
@@ -17,7 +17,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.2.0 - Calendar & House Settings Improvements
-> 
+> Enhanced calendar & house settings functionality
 
 - Added calendar page improvements (#3)
 - Improved house settings (#4)
@@ -26,8 +26,8 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### 0.3.0 - House Setup, Reimbursement and UI/UX
-> 
+### 0.3.0 - Expenses and UI/UX
+> Expenses page features & general frontend improvements
 
 - Added "reimbursement" feature (#7)
 - Improved general UX/UI (#8)
@@ -36,8 +36,8 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### 0.4.0 - Expense & Database
-> 
+### 0.4.0 - Database
+> Database implementation
 
 - Implemented SQLite3 database (#11)
 - Updated .gitignore for database files (#12)
@@ -45,7 +45,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ### 0.5.0 - Testing & Infrastructure
-> 
+> Quality assurance & documentation
 
 - Added functions docstrings documentation (#13)
 - Created comprehensive test suite (#14)
@@ -53,8 +53,8 @@ All notable changes to the **Flatmates App** project are documented in this file
 
 ---
 
-### 0.6.0 - Implement Home/Data erasure 
-> 
+### 0.6.0 - Implement Home/Data erasure
+> Implement house and data deletion feature
 
 - Create delete home and data option (#16)
 
@@ -65,7 +65,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ## [1.0.0] - First Release
-> Initial Public Release
+> Initial public release
 
 **Complete flatmate management system featuring:**
 - House and flatmate setup
@@ -78,7 +78,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 ---
 
 ## [1.1.0] - Implement user login/registration
-> 
+> Production ready with authentication & backend integration
 
 - Connected Railway backend hosting (#17)
 - Updated README with deployment instructions (#18)
@@ -86,7 +86,7 @@ All notable changes to the **Flatmates App** project are documented in this file
 - **Feature**: Added user login and registration (#20)
 - Fix backend API pointer (#21)
 - Change app name (#22)
-- Added CHANGELOG.md and versioning
+- Added CHANGELOG.md and versioning (#23)
 
 **PRs included**: #17-#23
 
