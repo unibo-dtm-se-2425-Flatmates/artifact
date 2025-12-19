@@ -90,8 +90,11 @@ def require_auth() -> Dict[str, Any]:
 
 def render_sidebar():
     """Render the Streamlit sidebar navigation and styling."""
+
+    app_version = "v1.1.0" 
+
     with st.sidebar:
-        st.title("🏠 Flatmates")
+        st.title("🏠 Flatmates App")
 
         profile = st.session_state.get("profile") or {}
         user = profile.get("user", {}) if isinstance(profile, dict) else {}
@@ -123,7 +126,10 @@ def render_sidebar():
         st.page_link("pages/3_Expenses.py", label="Expenses", icon="💸")
         
         st.markdown("---")
-
+        
+        # Display version
+        st.markdown(f"**Version:** {app_version}")
+        
     # Hide default navigation
     st.markdown("""
         <style>
