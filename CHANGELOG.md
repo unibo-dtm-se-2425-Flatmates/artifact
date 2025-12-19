@@ -66,10 +66,14 @@ All notable changes to the **Flatmates App** project are documented in this file
 > Initial public release
 
 **Complete flatmate management system featuring:**
-- House and flatmate setup ([#1](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/1))
-- Shared calendar for events ([#3](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/3))
-- Expense tracking and reimbursement system ([#7](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/7))
-- Debt overview and management ([#10](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/10))
+- Shared calendar for events
+- Expense tracking, debt semplificator and reimbursement system
+- Shopping list feature
+- House setup settings page
+- UX/UI imporvements
+- Database integration
+- Test suite
+- Documentation
 
 **PRs included**: #1-#16
 
@@ -78,13 +82,10 @@ All notable changes to the **Flatmates App** project are documented in this file
 ## [1.1.0] - Implement user login/registration
 > Production ready with authentication & backend integration
 
-- Connected Railway backend hosting ([#17](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/17))
-- Updated README with deployment instructions ([#18](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/18))
-- Fixed failing frontend tests ([#19](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/19))
+- Connected Railway backend hosting
+- Various fix (failing frontend tests, backend API pointer, app name)
 - **Feature**: Added user login and registration ([#20](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/20))
-- Fix backend API pointer ([#21](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/21))
-- Change app name ([#22](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/22))
-- Added CHANGELOG.md and versioning ([#23](https://github.com/unibo-dtm-se-2425-Flatmates/artifact/pull/23))
+- Documentation and versioning update
 
 **PRs included**: #17-#23
 
